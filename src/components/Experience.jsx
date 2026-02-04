@@ -106,7 +106,7 @@ const Experience = () => {
             initial={false}
             animate={{ left: sliderStyle.x, width: sliderStyle.width }}
             transition={{ type: 'spring', stiffness: 300, damping: 40 }}
-            className="absolute top-1 h-[46px] bg-taupe rounded-[8px] shadow-sm sm:shadow-md z-0"
+            className="absolute top-1 bottom-1 bg-taupe rounded-[8px] shadow-sm sm:shadow-md z-0"
             style={{ willChange: 'left, width' }}
           />
 
