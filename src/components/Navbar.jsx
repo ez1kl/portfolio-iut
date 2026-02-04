@@ -1,13 +1,26 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { styles } from '../styles';
 import { navLinks } from '../constants';
-import { close, menu } from '../assets';
+import { close, menu, download, downloadHover } from '../assets';
 import LogoY from '../assets/logo/Y.png';
 
 const Navbar = () => {
   const [active, setActive] = useState('');
   const [toggle, setToggle] = useState(false);
+  const lastClickRef = useRef(0);
+
+  const handleAnchorClick = (e, nav) => {
+    // non-intrusive debounce: ignore clicks within 250ms
+    const now = Date.now();
+    if (now - lastClickRef.current < 250) {
+      e.preventDefault();
+      return;
+    }
+    lastClickRef.current = now;
+    setActive(nav.title);
+    // allow default anchor behavior (scroll) to preserve UX
+  };
 
   return (
     <nav
@@ -34,11 +47,23 @@ const Navbar = () => {
               key={nav.id}
               className={`${active === nav.title ? 'text-french' : 'text-eerieBlack'
                 } hover:text-taupe text-[21px] font-medium font-mova 
-              uppercase tracking-[3px] cursor-pointer nav-links`}
-              onClick={() => setActive(nav.title)}>
-              <a href={`#${nav.id}`}>{nav.title}</a>
+              uppercase tracking-[3px] cursor-pointer nav-links`}>
+              <a href={`#${nav.id}`} onClick={(e) => handleAnchorClick(e, nav)}>
+                {nav.title}
+              </a>
             </li>
           ))}
+          <li className="text-eerieBlack hover:text-taupe text-[21px] font-medium font-mova uppercase tracking-[3px] cursor-pointer nav-links">
+            <a 
+              href="CV_YassineBadaoui.pdf" 
+              download="CV_YassineBadaoui.pdf"
+              title="Télécharger mon CV"
+              className="flex items-center gap-2"
+            >
+              CV
+              <img src={download} alt="download" className="w-5 h-5 object-contain" />
+            </a>
+          </li>
         </ul>
 
         {/* mobile */}
@@ -73,6 +98,15 @@ const Navbar = () => {
                     <a href={`#${nav.id}`}>{nav.title}</a>
                   </li>
                 ))}
+                <li className="text-eerieBlack text-[32px] sm:text-[48px] font-bold font-arenq uppercase tracking-[1px] cursor-pointer">
+                  <a 
+                    href="CV_YassineBadaoui.pdf" 
+                    download="CV_YassineBadaoui.pdf"
+                    onClick={() => setToggle(!toggle)}
+                  >
+                    CV
+                  </a>
+                </li>
               </ul>
 
             </div>

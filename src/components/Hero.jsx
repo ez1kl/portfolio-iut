@@ -2,20 +2,20 @@ import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { styles } from '../styles';
 import { navLinks } from '../constants';
-import { bwmap, worldmap, github } from '../assets';
+import { bwmap, worldmap, github, me } from '../assets';
 import linkedin from '../assets/icons/linkedin.svg';
 
 const Hero = () => {
   return (
     <>
-      <div className="absolute top-0 left-0 z-0 h-[100vh] w-screen">
+      <div className="absolute top-0 left-0 z-0 h-screen h-[100dvh] w-screen">
         <img
           src={bwmap}
           alt="world map"
           className="w-full h-full sm:block hidden object-cover"
         />
       </div>
-      <div className="absolute top-0 left-0 z-0 h-[100vh] w-screen">
+      <div className="absolute top-0 left-0 z-0 h-screen h-[100dvh] w-screen">
         <img
           src={worldmap}
           alt="world map"
@@ -23,11 +23,11 @@ const Hero = () => {
         />
       </div>
       <section
-        className="relative flex sm:flex-row flex-col w-full h-screen mx-auto 
+        className="relative flex sm:flex-row flex-col w-full h-screen h-[100dvh] mx-auto 
         sm:bg-hero bg-hero-mobile overflow-hidden">
         <div
-          className={`absolute inset-0 sm:top-[250px] top-[150px] 
-          lg:top-[150px] xl:top-[250px] ${styles.paddingX} 
+          className={`absolute inset-0 sm:top-[230px] top-[120px] 
+          lg:top-[150px] xl:top-[230px] ${styles.paddingX} 
           max-w-7xl mx-auto flex flex-row items-start
           justify-between gap-3`}>
           <div className="flex flex-col justify-center items-center mt-5 ml-3">
@@ -46,11 +46,15 @@ const Hero = () => {
                 Badaoui
               </span>
             </h1>
-            <p className={`${styles.heroSubText} mt-2 text-eerieBlack`}>
-              Étudiant informatique <br className="sm:block hidden" />
-              Je transforme la curiosité en compétences
+            <p className={`${styles.heroSubText} mt-1 text-eerieBlack`}>
+              Développeur Fullstack | Étudiant BUT Informatique <br className="sm:block hidden" />
             </p>
-            <div className="flex gap-4 mt-6">
+            <p className="mt-2 text-[16px] text-taupe font-medium max-w-2xl">
+              Spécialisé en développement frontend (React, TypeScript) et backend (Node.js, PostgreSQL).
+              <br />
+              J'excelle dans le travail d'équipe et l'optimisation d'applications.
+            </p>
+            <div className="flex gap-4 mt-4 relative z-10">
               <a
                 href="https://github.com/ez1kl"
                 target="_blank"
@@ -70,8 +74,6 @@ const Hero = () => {
           <div
             className="w-screen flex flex-col items-start 
             justify-center sm:-ml-[3rem] xxs:mt-4"></div>
-
-          <div></div>
         </div>
 
         <div

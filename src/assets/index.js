@@ -41,6 +41,8 @@ import microverse from './company/microverse.png';
 import esgi from './company/ESGI.jpg';
 import iutblagnac from './company/iut-blagnac.png';
 
+import me from './personal/profile.jpg';
+
 import komikult from './projects/komikult.png';
 import leaderboard from './projects/leaderboard.png';
 import math from './projects/math-magicians.png';
@@ -51,6 +53,7 @@ import motus from './projects/motus.png';
 import ransomware from './projects/ransomware.png';
 import javarevolution from './projects/JavaRevolution.png';
 import sosafe from './projects/sosafe.png';
+import emailing from './projects/emailing.webp';
 
 export {
   bwmap,
@@ -91,6 +94,7 @@ export {
   motus,
   ransomware,
   javarevolution,
+  emailing,
   sosafe,
   leaderboard,
   math,
@@ -101,4 +105,5 @@ export {
   microverse,
   esgi,
   iutblagnac,
+  me,
 };

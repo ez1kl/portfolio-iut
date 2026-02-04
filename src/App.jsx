@@ -7,12 +7,15 @@ import {
   Navbar,
   Tech,
   Projects,
+  ScrollProgress,
+  Skills,
 } from './components';
 
 const App = () => {
   return (
     <BrowserRouter>
       <div className="relative z-0">
+        <ScrollProgress />
         <div>
           <Navbar />
           <Hero />
@@ -23,7 +26,7 @@ const App = () => {
         </div>
 
         <div className="bg-tech bg-cover bg-center bg-no-repeat pb-10">
-          <Tech />
+          <Skills />
         </div>
 
         <Projects />

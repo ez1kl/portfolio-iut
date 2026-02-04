@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import {
   VerticalTimeline,
   VerticalTimelineElement,
@@ -56,50 +56,92 @@ const Experience = () => {
   const [showEducation, setShowEducation] = useState(false);
   const currentData = showEducation ? education : experiences;
 
+  // refs to measure button sizes and position
+  const containerRef = useRef(null);
+  const profRef = useRef(null);
+  const schoolRef = useRef(null);
+  const [sliderStyle, setSliderStyle] = useState({ x: 0, width: 180 });
+
+  // update slider position/width based on measured button
+  const updateSlider = () => {
+    const container = containerRef.current;
+    const prof = profRef.current;
+    const school = schoolRef.current;
+    if (!container || !prof || !school) return;
+
+    const target = showEducation ? school : prof;
+    // calculate slider to match button exactly (no inset, perfect alignment)
+    const x = target.offsetLeft;
+    const width = target.offsetWidth;
+    setSliderStyle({ x, width });
+  };
+
+  useEffect(() => {
+    updateSlider();
+    window.addEventListener('resize', updateSlider);
+    return () => window.removeEventListener('resize', updateSlider);
+  }, [showEducation]);
+
   return (
     <>
       <motion.div variants={textVariant()}>
-        <p className={`${styles.sectionSubText} sm:pl-16 pl-[2rem]`}>
+        <p className={`${styles.sectionSubText} sm:pl-16 pl-[2rem] text-[20px] font-bold text-battleGray`}>
           Mon parcours {showEducation ? 'scolaire' : 'professionnel'}
         </p>
-        <h2 className={`${styles.sectionHeadText} sm:pl-16 pl-[2rem]`}>
+        <motion.h2
+          key={showEducation ? 'formation' : 'experiences'}
+          className={`${styles.sectionHeadText} sm:pl-16 pl-[2rem]`}
+          initial={{ opacity: 0, y: -8, scale: 0.98 }}
+          animate={{ opacity: 1, y: 0, scale: 1 }}
+          transition={{ type: 'spring', stiffness: 250, damping: 20 }}>
           {showEducation ? 'Formation.' : 'Expériences.'}
-        </h2>
+        </motion.h2>
       </motion.div>
 
       <div className="mt-10 flex justify-center">
-        <div className="inline-flex rounded-[10px] bg-jetLight p-1 shadow-lg gap-1">
+  <div ref={containerRef} className="relative inline-flex rounded-[12px] bg-jetLight p-1 shadow-lg gap-1 overflow-hidden">
+          {/* animated slider */}
+          <motion.div
+            layout
+            initial={false}
+            animate={{ left: sliderStyle.x, width: sliderStyle.width }}
+            transition={{ type: 'spring', stiffness: 300, damping: 40 }}
+            className="absolute top-1 h-[46px] bg-taupe rounded-[8px] shadow-sm sm:shadow-md z-0"
+            style={{ willChange: 'left, width' }}
+          />
+
           <button
+            ref={profRef}
             onClick={() => setShowEducation(false)}
-            className={`min-w-[180px] px-8 py-3 rounded-[8px] font-beckman font-bold text-[15px] 
+            className={`relative z-10 min-w-[140px] sm:min-w-[210px] px-6 sm:px-8 py-3 rounded-[8px] font-beckman font-bold text-[17px] sm:text-[19px] 
               transition-all duration-300 ease-in-out transform text-center whitespace-nowrap
-              ${
-              !showEducation
-                ? 'bg-taupe text-timberWolf shadow-md scale-[1.02]'
-                : 'text-taupe hover:text-timberWolf hover:scale-[1.01]'
-            }`}>
+              ${!showEducation ? 'text-timberWolf' : 'text-taupe'}`}>
             PROFESSIONNEL
           </button>
+
           <button
+            ref={schoolRef}
             onClick={() => setShowEducation(true)}
-            className={`min-w-[180px] px-8 py-3 rounded-[8px] font-beckman font-bold text-[15px] 
+            className={`relative z-10 min-w-[140px] sm:min-w-[210px] px-6 sm:px-8 py-3 rounded-[8px] font-beckman font-bold text-[17px] sm:text-[19px] 
               transition-all duration-300 ease-in-out transform text-center whitespace-nowrap
-              ${
-              showEducation
-                ? 'bg-taupe text-timberWolf shadow-md scale-[1.02]'
-                : 'text-taupe hover:text-timberWolf hover:scale-[1.01]'
-            }`}>
+              ${showEducation ? 'text-timberWolf' : 'text-taupe'}`}>
             SCOLAIRE
           </button>
         </div>
       </div>
 
       <div className="mt-20 flex flex-col">
-        <VerticalTimeline className="vertical-timeline-custom-line">
-          {currentData.map((experience, index) => (
-            <ExperienceCard key={index} experience={experience} />
-          ))}
-          <VerticalTimelineElement
+        <motion.div
+          key={showEducation ? 'education' : 'experience'}
+          initial={{ opacity: 0, scale: 0.9, rotate: -6 }}
+          animate={{ opacity: 1, scale: 1, rotate: 0 }}
+          exit={{ opacity: 0, scale: 0.9, rotate: 6 }}
+          transition={{ type: 'spring', stiffness: 200, damping: 18 }}>
+          <VerticalTimeline className="vertical-timeline-custom-line">
+              {currentData.map((experience, index) => (
+                <ExperienceCard key={index} experience={experience} />
+              ))}
+              <VerticalTimelineElement
             contentStyle={{
               background: '#eaeaec',
               color: '#292929',
@@ -123,33 +165,30 @@ const Experience = () => {
               </div>
             }>
             <div className="relative group">
-              <button
+              <a
+                href="/CV_YassineBadaoui.pdf"
+                target="_blank"
+                rel="noopener noreferrer"
                 className="live-demo flex justify-between 
                 sm:text-[18px] text-[14px] text-taupe 
                 font-bold font-beckman items-center py-5 pl-3 pr-3 
                 whitespace-nowrap gap-1 sm:w-[148px] sm:h-[58px] 
                 w-[125px] h-[46px] rounded-[10px] bg-jetLight 
-                sm:mt-[22px] mt-[16px] opacity-50 
-                cursor-not-allowed transition duration-[0.2s] 
-                ease-in-out"
-                disabled>
+                sm:mt-[22px] mt-[16px] hover:bg-french hover:text-white
+                transition duration-[0.2s] 
+                ease-in-out">
                 Mon CV
                 <img
                   src={download}
                   alt="download"
                   className="download-btn sm:w-[26px] sm:h-[26px] 
-                  w-[23px] h-[23px] object-contain opacity-50"
+                  w-[23px] h-[23px] object-contain"
                 />
-              </button>
-              <span className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2
-                bg-eerieBlack text-white text-xs font-semibold px-3 py-2 
-                rounded-md opacity-0 group-hover:opacity-100 
-                transition-opacity duration-300 whitespace-nowrap z-50">
-                Pas de recherche d'emploi en cours
-              </span>
+              </a>
             </div>
           </VerticalTimelineElement>
-        </VerticalTimeline>
+          </VerticalTimeline>
+        </motion.div>
       </div>
     </>
   );

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { SectionWrapper } from '../hoc';
 import { styles } from '../styles';
@@ -6,18 +6,48 @@ import { github, pineapple, pineappleHover } from '../assets';
 import { projects } from '../constants';
 import { fadeIn, textVariant, staggerContainer } from '../utils/motion';
 
+// Mapping des compétences par projet
+const projectCompetences = {
+  'project-1': ['c1'], // Motus
+  'project-2': ['c1', 'c6'], // Java Revolution
+  'project-3': ['c1', 'c2', 'c6'], // SOSAFE
+  'project-4': ['c2'], // Ransomware
+  'project-5': ['c1', 'c2', 'c6'], // Outil d'Emailing IUT
+};
+
+const competenceLabels = {
+  'c1': 'Développement d\'application',
+  'c2': 'Optimisation d\'applications',
+  'c6': 'Travail d\'équipe'
+};
+
 const ProjectCard = ({
   id,
   name,
   description,
+  tags,
   image,
   repo,
   demo,
   index,
   active,
   handleClick,
+  competences,
+  onNavigateToSkills,
 }) => {
   const [isHovered, setIsHovered] = useState(false);
+  
+  const handleCompetenceClick = (e, competenceId) => {
+    console.log('🔴 CLICK SUR COMPETENCE DANS LE BUTTON');
+    console.log('CompetenceId reçu:', competenceId);
+    console.log('onNavigateToSkills disponible:', typeof onNavigateToSkills);
+    e.stopPropagation();
+    if (onNavigateToSkills) {
+      onNavigateToSkills(competenceId);
+    } else {
+      console.error('❌ onNavigateToSkills pas disponible!');
+    }
+  };
   
   return (
     <motion.div
@@ -95,11 +125,46 @@ const ProjectCard = ({
               {name}
             </h2>
             <p
-              className="text-silver sm:text-[14px] text-[12px] 
-              max-w-3xl sm:leading-[24px] leading-[18px]
-              font-poppins tracking-[1px]">
+              className="text-timberWolf sm:text-[16px] text-[14px] 
+              max-w-3xl sm:leading-[26px] leading-[22px]
+              font-poppins tracking-[0.5px]">
               {description}
             </p>
+            <div className="mt-4 flex flex-wrap gap-2">
+              {tags.map((tag) => (
+                <p
+                  key={tag.name}
+                  className={`text-[14px] ${tag.color} font-bold font-poppins`}
+                >
+                  #{tag.name}
+                </p>
+              ))}
+            </div>
+            
+            {/* Compétences mobilisées */}
+            {competences && competences.length > 0 && (
+              <div className="mt-4">
+                <p className="text-timberWolf text-[12px] font-medium mb-2">
+                  🎯 Compétences mobilisées :
+                </p>
+                <div className="flex flex-wrap gap-2">
+                  {competences.map((compId) => (
+                    <button
+                      key={compId}
+                      onClick={(e) => {
+                        console.log('✅ CLICK DETECTE SUR LE BOUTON!');
+                        console.log('CompId:', compId);
+                        handleCompetenceClick(e, compId);
+                      }}
+                      className="px-3 py-1 bg-french/80 hover:bg-french rounded-full 
+                      text-[11px] text-white font-medium transition-all hover:scale-105 relative z-50">
+                      {competenceLabels[compId]}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
+            
             {!demo && repo && (
               <div className="text-taupe sm:text-[12px] text-[10px] 
               italic sm:mt-[22px] mt-[16px] font-poppins">
@@ -115,6 +180,68 @@ const ProjectCard = ({
 
 const Projects = () => {
   const [active, setActive] = useState('project-2');
+  const [highlightedCompetence, setHighlightedCompetence] = useState(null);
+
+  useEffect(() => {
+    // Listen for competence filtering from Skills component
+    const handleFilterByCompetence = (event) => {
+      const compId = event.detail;
+      setHighlightedCompetence(compId);
+      
+      // Trouver les projets qui ont cette compétence
+      const projectsWithCompetence = projects.filter(project => 
+        projectCompetences[project.id]?.includes(compId)
+      );
+      
+      if (projectsWithCompetence.length > 0) {
+        // Activer le premier projet filtré
+        setActive(projectsWithCompetence[0].id);
+      }
+    };
+
+    window.addEventListener('filterByCompetence', handleFilterByCompetence);
+    return () => window.removeEventListener('filterByCompetence', handleFilterByCompetence);
+  }, []);
+
+  const handleNavigateToSkills = (competenceId) => {
+    console.log('=== CLICK SUR COMPETENCE ===');
+    console.log('Competence ID:', competenceId);
+    
+    // Chercher l'élément cible avec l'ID exact
+    const elementId = `competence-${competenceId}`;
+    console.log('Element ID cherché:', elementId);
+    
+    const targetElement = document.getElementById(elementId);
+    console.log('Element trouvé:', targetElement);
+    
+    if (!targetElement) {
+      console.error('❌ Compétence non trouvée:', elementId);
+      const allElements = document.querySelectorAll('[id^="competence-"]');
+      console.log('Elements disponibles:', Array.from(allElements).map(el => el.id));
+      return;
+    }
+
+    // Un seul scroll fluide vers la carte
+    targetElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    console.log('✅ Scroll fluide vers la carte');
+
+    // Ajouter le highlight après un court délai
+    setTimeout(() => {
+      console.log('Ajout du highlight...');
+      targetElement.classList.add('competence-highlighted');
+      console.log('✅ Classe highlight ajoutée');
+
+      // Retirer après 5 secondes
+      setTimeout(() => {
+        targetElement.classList.remove('competence-highlighted');
+        console.log('✅ Classe highlight retirée');
+      }, 5000);
+    }, 500);
+  };
+
+  const filteredProjects = highlightedCompetence
+    ? projects.filter((project) => projectCompetences[project.id]?.includes(highlightedCompetence))
+    : projects;
 
   return (
     <div className="-mt-[6rem]">
@@ -130,28 +257,50 @@ const Projects = () => {
           Ces projets démontrent mon expertise avec des exemples pratiques de
           certains de mes projets, incluant de brèves descriptions et prochainnement des liens
           vers les dépôts de code et les démos en ligne. Ils mettent en avant
-          ma capacité à relever des défis complexes, à m'adapter à diverses
+          ma capacité à relever des défis complexes, à m'adaptater à diverses
           technologies et à gérer efficacement des projets.
         </motion.p>
       </div>
 
       <motion.div
+        key={highlightedCompetence || 'all-projects'}
         variants={staggerContainer}
         initial="hidden"
-        whileInView="show"
+        animate="show"
         viewport={{ once: false, amount: 0.25 }}
         className={`${styles.innerWidth} mx-auto flex flex-col`}>
         <div className="mt-[50px] flex lg:flex-row flex-col min-h-[70vh] gap-5">
-          {projects.map((project, index) => (
+          {filteredProjects.map((project, index) => (
             <ProjectCard
               key={project.id}
               index={index}
               {...project}
               active={active}
               handleClick={setActive}
+              competences={projectCompetences[project.id]}
+              onNavigateToSkills={handleNavigateToSkills}
             />
           ))}
         </div>
+        
+        {highlightedCompetence && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="mt-8 p-4 bg-french/20 border-2 border-french rounded-xl flex justify-between items-center">
+            <p className="text-white text-[16px]">
+              🎯 Projets affichés pour : <strong>{competenceLabels[highlightedCompetence]}</strong>
+            </p>
+            <button
+              onClick={() => {
+                setHighlightedCompetence(null);
+                setActive('project-2');
+              }}
+              className="px-4 py-2 bg-french rounded-md text-[14px] font-bold text-white hover:bg-opacity-80 transition-all">
+              Afficher tous les projets
+            </button>
+          </motion.div>
+        )}
       </motion.div>
     </div>
   );

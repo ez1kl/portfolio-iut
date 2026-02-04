@@ -22,6 +22,7 @@ import {
   ransomware,
   javarevolution,
   sosafe,
+  emailing,
   leaderboard,
   math,
   movie,
@@ -36,11 +37,19 @@ import {
 export const navLinks = [
   {
     id: 'about',
-    title: 'A propos',
+    title: 'À propos',
+  },
+  {
+    id: 'skills',
+    title: 'Compétences',
   },
   {
     id: 'projects',
     title: 'Projets',
+  },
+  {
+    id: 'work',
+    title: 'Expériences',
   },
   {
     id: 'contact',
@@ -109,7 +118,7 @@ const technologies = [
 const experiences = [
   {
     title: 'Développeur web',
-    company_name: 'Sante formapro',
+    company_name: 'Sante Formapro',
     icon: microverse,
     iconBg: '#333333',
     date: 'Oct 2024 - Actuel',
@@ -145,6 +154,20 @@ const projects = [
     id: 'project-1',
     name: 'Motus',
     description: 'Un jeu de lettres inspiré du célèbre jeu Motus, développé en C avec SDL2. Devinez le mot en un nombre limité d\'essais avec des indices visuels.',
+    tags: [
+      {
+        name: 'c',
+        color: 'blue-text-gradient',
+      },
+      {
+        name: 'sdl2',
+        color: 'green-text-gradient',
+      },
+      {
+        name: 'algorithmie',
+        color: 'pink-text-gradient',
+      },
+    ],
     image: motus,
     repo: 'https://github.com/ez1kl/motus-game',
     demo: 'https://ez1kl.github.io/motus-game/',
@@ -153,24 +176,88 @@ const projects = [
     id: 'project-2',
     name: 'Java Revolution',
     description: 'Un RPG narratif interactif inspiré du "Livre dont vous êtes le héros". Plongez dans la France révolutionnaire de 1789 avec un système de combat et de sauvegarde.',
+    tags: [
+      {
+        name: 'java',
+        color: 'blue-text-gradient',
+      },
+      {
+        name: 'poo',
+        color: 'green-text-gradient',
+      },
+      {
+        name: 'swing',
+        color: 'pink-text-gradient',
+      },
+    ],
     image: javarevolution,
     repo: 'https://github.com/ez1kl/java-revolution',
     demo: 'https://ez1kl.github.io/java-revolution/',
   },
   {
     id: 'project-3',
+    name: 'SoSafe',
+    description: 'Plateforme web de sensibilisation à la cybersécurité. Modules interactifs et scénarios éducatifs pour former les utilisateurs aux bonnes pratiques de sécurité informatique.',
+    tags: [
+      {
+        name: 'react',
+        color: 'blue-text-gradient',
+      },
+      {
+        name: 'nodejs',
+        color: 'green-text-gradient',
+      },
+      {
+        name: 'tailwind',
+        color: 'pink-text-gradient',
+      },
+    ],
+    image: sosafe,
+    repo: 'https://github.com/ez1kl/sosafe',
+    demo: null,
+  },
+  {
+    id: 'project-4',
     name: 'Ransomware',
     description: 'Un projet en assembleur x86 qui simule le fonctionnement d\'un ransomware. Démonstration des techniques de chiffrement et de cybersécurité à des fins éducatives.',
+    tags: [
+      {
+        name: 'assembly',
+        color: 'blue-text-gradient',
+      },
+      {
+        name: 'security',
+        color: 'green-text-gradient',
+      },
+      {
+        name: 'cryptography',
+        color: 'pink-text-gradient',
+      },
+    ],
     image: ransomware,
     repo: null,
     demo: null,
   },
   {
-    id: 'project-4',
-    name: 'SoSafe',
-    description: 'Plateforme web de sensibilisation à la cybersécurité. Modules interactifs et scénarios éducatifs pour former les utilisateurs aux bonnes pratiques de sécurité informatique.',
-    image: sosafe,
-    repo: 'https://github.com/ez1kl/sosafe',
+    id: 'project-5',
+    name: 'Outil d\'Emailing IUT',
+    description: 'Plateforme développée pour l\'IUT de Blagnac permettant la gestion et l\'envoi de campagnes d\'emailing ciblées. Solution adaptée aux besoins de communication interne et externe de l\'établissement.',
+    tags: [
+      {
+        name: 'react',
+        color: 'blue-text-gradient',
+      },
+      {
+        name: 'nodejs',
+        color: 'green-text-gradient',
+      },
+      {
+        name: 'scrum',
+        color: 'pink-text-gradient',
+      },
+    ],
+    image: emailing,
+    repo: 'https://github.com/Magaz-Yahya/SAE-ALT-S5-Mailing',
     demo: null,
   },
 ];
