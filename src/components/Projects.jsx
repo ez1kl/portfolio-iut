@@ -84,8 +84,8 @@ const ProjectCard = ({
       ) : (
         <>
           <div
-            className="absolute bottom-0 p-8 justify-start w-full 
-            flex-col bg-[rgba(122,122,122,0.5)] rounded-b-[24px] z-20">
+            className="relative p-8 flex flex-col w-full 
+            bg-[rgba(122,122,122,0.6)] rounded-b-[24px] z-20">
            <div className="absolute inset-0 flex justify-end m-3">
   {repo ? (
     <div
